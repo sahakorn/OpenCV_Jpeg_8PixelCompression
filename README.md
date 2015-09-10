@@ -9,20 +9,20 @@ TODO: This project for Multimedia class (Naresuan University) this is an My Assi
 3. Install opencv on windows and set the OpenCV enviroment [example : C:\opencv3\opencv\build\x86\vc12\bin]
 4. Create Project c++ Console in visual studio 2012 
 5. config Project to using opencv library  see more : [http://docs.opencv.org/doc/tutorials/introduction/windows_install/windows_install.html]
+
 ## Usage
 This project create on windows platform (8.1) and visual studio 2012 , Library opencv 3.0
+
 ## Contributing
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
-## History
-TODO: Write history
-## Credits
-TODO: Write credits
+
 ## License
 This is an Assignment for Multimedia course. Copyright : Naresuan University.
+
 ## Contract
 1. Name : Sahakorn Buangam [ Korn ]  Phisanulok , Thailand
 2. email : sahakorn.new@gmail.com
