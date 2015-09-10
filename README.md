@@ -1,10 +1,11 @@
 # OpenCV_Jpeg_8PixelCompression
 <snippet>
-  <content><![CDATA[
-# ${1:Project Name}
-TODO: Write a project description
+  <content>This Project Using DCT (Discrete Cosine Transform) for Compression jpeg image(8x8 pixel blog) and Quantization  in Q90 ,then reordered by zigzag algorithym and Convert decimal to binary number and using Run-length Coding v2(Binary) 
+# ${1:Jpeg Compression usin DCT}
+TODO: This project for Multimedia class (Naresuan University) this is an My Assignment
 ## Installation
-TODO: Describe the installation process
+TODO: This Project using Library Opecncv 3.0 for read image 8x8 pixel in gray scale [http://opencv.org/]
+TODO: Using Visual Studio 2012 (Can using lasted version) on Windows 8.1
 ## Usage
 TODO: Write usage instructions
 ## Contributing
