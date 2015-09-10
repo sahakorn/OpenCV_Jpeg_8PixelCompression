@@ -1,14 +1,41 @@
+/*
+ * Multimedia DCT for Jpec Compression 
+ * @Since September 9, 2015
+ * @author Sahakorn Buangam , Computer Engineering.
+ * @email sahakorn.new@gmail.com
+ * @Instructor: A. Paisarn Muneesawang , Ph.D.
+ *
+ */
+/*********************************************************************************************/
+//		This Program using Visual Studio 2012 and Library Opencv 3.0 on Windows 8.1.		 //
+//		I using Opencv for read a image (gray scale) and Convert to int array.				 //
+//		If You want to change image can change path at img, Mat file.						 //
+//		Copyright MyClass in Falculty of Computer Engineering Naresuan University.			 //
+//																							 //
+//		Compression Step: Using DCT															 //
+//			1.) Read Image from file (Mat) and convert to int Array						     //
+//			2.) Send to DCT tranfomer (Lossless)											 //
+//			3.) The output of DCT transformation is a matrix of real numbers.				 //
+//				We have a matrix of integer number for  Quantization ,q_50,q_10,q_90		 //
+//			4.) Using Zigzag Algorithm for reorder of ouput of quantization					 //
+//			5.) Convert to number to binary.												 //
+//			6.) Using Run-Length Algorithm for Compression binary number.					 //
+/*																							 //
+/*********************************************************************************************/
+
 #include <iostream>
-#include <opencv2\opencv.hpp>
-#include <cmath>
-#include <math.h>  
-#define PI 3.14159265
+#include <opencv2\opencv.hpp>  // For using read image 
+#include <cmath>			   // For rounding 			
+#include <math.h>			   // For using sqrt and cos();
+#include<iomanip>
+
+#define PI 3.14159265			// Difine pi value
+
 using namespace std;
 using namespace cv;
 
-float _co(int m , int n);
-void crate_t();
-
+	float _co(int m , int n);
+	void crate_t();
 	void matrix(int num);
 	void Q_10();
 	void Q_50();
@@ -26,8 +53,20 @@ void crate_t();
 	float qunt[8][8];
 	int decimal[64];
 
+
 void zigzag(){
-	int n = 0;
+
+	/******************************************	  Zizag Algorithym    ***********************************************/
+	/*			 First Step get value top left of array[][]															*/
+	/*			 Second  >> patern 1 , if column is odd, then row will increase and column will decrease index		*/
+	/*					 >> patern 2 , if column is evnt, then row will decrease and column will increase index		*/
+	/*			 Third   >> patern 1 , if column is odd, then column will increase and row will decrease index		*/
+	/*					 >> patern 2 , if column is evnt, then column will decrease and row will increase index		*/
+	/*																												*/
+	/******************************************	  Zizag Algorithym    ***********************************************/
+	int n = 0; // For increas index of decimal[]
+	
+	//--------- First Step ---------// 
 	for(int i = 0;i<2;i++)
 	{
 		for(int j =0;j<2;j++){
@@ -37,52 +76,51 @@ void zigzag(){
 				break;
 		}
 	}
+	//------ End of First Step -------// 
+
+
+	//--------- Second Step ---------// 
 	for(int i = 2;i<8;i++)
 	{
-		
 			int k = 0,l= i;
-			if(i%2 == 0){
+			if(i%2 == 0){					// Check if Event number.
 			while( k <=i){
 				decimal[n] = pixelImg[k][l];
-				//cout<<decimal[n]<< " ";
 				n++;
 				k++;
 				l--;
+				}
 			}
-			}
-			else{
+			else{							// Odd number.
 					while( k <=i){
 				decimal[n] = pixelImg[l][k];
-				//cout<<decimal[n]<< " ";
 				n++;
 				k++;
 				l--;
-			}
+				}
 			}
 		}
-	
-	cout<<endl<<"****************"<<endl;
+	//--------- End of Second Step ---------// 
 
+	//--------- Third Step ---------// 
 	int endloop = 1;
 	int start = 7;
 	for(int i = start;i>=1;i--)
 	{
 		int k = endloop,l= 7;
-		if(endloop %2 == 1)
+		if(endloop %2 == 1)					// Check if Odd number.
 		{
 			while(k <= start){
 				decimal[n] = pixelImg[k][l];
-			//	cout<<decimal[n]<< " ";
 				n++;
 				l--;
 				k++;
 			}
 		}
 		else
-		{
-			while(k <= start){
+		{                                      //  Event number.
+		while(k <= start){
 				decimal[n] = pixelImg[k][l];
-			//	cout<<decimal[n]<< " ";
 				n++;
 				l--;
 				k++;
@@ -90,6 +128,9 @@ void zigzag(){
 		}
 		endloop++;
 	}
+	//--------- End of Third Step ---------// 
+
+	// Show value in reordered
 	for(int i = 0;i<64;i++)
 	{
 		cout<<decimal[i]<< " ";
@@ -97,6 +138,9 @@ void zigzag(){
 	
 }
 void matrix(int num){
+	// If num == 0 is T matrix of DCT x pixelImg
+	// If num == 1 is T(transpot) of DCT x OUPUT of T x pixelImg
+	// If num == 2 is Quantization
 
 	if (num == 0){
 	float temp = 0.0;
@@ -107,16 +151,14 @@ void matrix(int num){
 				temp += T[k][n]*pixelImg[n][l];
 			}
 			val_matrix[k][l] = temp;
-			//cout<<val_matrix[k][l]<< " ";
 			temp = 0;
 		}
-		//cout<<endl;
-
-	}
-	}
+		}
+	} // End of num = 0
 	else if(num == 1)
 	{
-			float temp = 0.0;
+		 cout<<endl<<"********* Real number Value ***********"<<endl;
+	float temp = 0.0;
 	for(int k = 0;k<8;++k){
 		for(int l =0;l<8;++l){
 			for(int n = 0;n<8;n++)
@@ -128,13 +170,13 @@ void matrix(int num){
 			
 				
 			tranform[k][l] = floor(temp);
-			cout<<tranform[k][l]<< " ";
+			cout<<tranform[k][l]<<"\t";
 			temp = 0;
 		}
 		cout<<endl;
 
 	}
-	}
+	}// End of num = 1
 	else if(num == 2)
 	{
 		 cout<<endl<<"********* Quantization ***********"<<endl;
@@ -142,15 +184,16 @@ void matrix(int num){
 	for(int k = 0;k<8;++k){
 		for(int l =0;l<8;++l){
 			qunt[k][l] = int(tranform[k][l]/q_50[k][l]);
-			
-			cout<<qunt[k][l]<< " ";
+			cout<<qunt[k][l]<<"\t";
 			
 		}
 		cout<<endl;
 
 	}
-	}
+	}// End of num = 2
 }
+
+// =============== C value of DCT ==================== //
 float _co(int m,int n){
 		// m = 0 
 		if( m == 0)
@@ -162,8 +205,9 @@ float _co(int m,int n){
 			return sqrtf(2.0/N);
 		}
 }
-void crate_t(){
+// ================================================ //
 
+void crate_t(){
   cout<<endl<<"********* Tranform Matrix ***********"<<endl;
 	for(int m = 0;m<N;m++)
 	{
@@ -171,7 +215,9 @@ void crate_t(){
 		{
 			float val = m*(2*n+1);
 			T[m][n] = _co(m,n)*cos(PI*val/16);
-			cout<<T[m][n]<<" ";
+			cout << std::fixed;
+			cout << std::setprecision(2);
+			cout<<T[m][n]<<"\t";
 		}
 		cout<<endl;
 	}
@@ -182,11 +228,10 @@ void crate_t(){
 		{
 			float val =n*(2*m+1);
 			T_[m][n] = _co(n,m)*cos(PI*val/16);
-			cout<<T_[m][n]<<" ";
+			cout<<T_[m][n]<<"\t";
 		}
 		cout<<endl;
 	}
-	 cout<<"******************************************"<<endl;
 }
 int  main(){
 	Mat img = imread("C:/Users/sahakornb/Documents/2015/Multimedia/JpegCompress/OpenCV_Jpeg_8PixelCompression/Image8Pixel.jpg",0);
@@ -206,7 +251,7 @@ int  main(){
 		for (int j = 0; j < img.cols; j++)
 		{
 			
-			cout << static_cast<int>(img.at<uchar>(j, i)) << " ";
+			cout << static_cast<int>(img.at<uchar>(j, i)) <<"\t";
 			pixelImg[j][i] = static_cast<int>(img.at<uchar>(j, i));
 			
 			//pixelImg[j][i] = ddd[ni];
@@ -259,14 +304,14 @@ void Q_50()
 	24,35,55,64,81,104,113,92,
 	49,64,78,87,103,121,120,101,
 	72,92,95,98,112,110,103,99};
-	cout<<endl<<"***************************** Q50 *******************"<<endl;
+	cout<<endl<<"******************** Quantization 50 *******************"<<endl;
 	int n = 0;
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
 			q_50[j][i] = data[n];
-			cout<<q_50[j][i]<<" ";
+			cout<<q_50[j][i]<<"\t";
 			n++;
 		}
 		cout<<endl;
