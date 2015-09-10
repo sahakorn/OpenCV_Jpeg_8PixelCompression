@@ -131,10 +131,13 @@ void zigzag(){
 	//--------- End of Third Step ---------// 
 
 	// Show value in reordered
+
+    cout<<endl<<"********* ReOrder by zigzag  ***********"<<endl;
 	for(int i = 0;i<64;i++)
 	{
-		cout<<decimal[i]<< " ";
+		cout<<decimal[i]<<",";
 	}
+	
 	
 }
 void matrix(int num){
@@ -234,8 +237,7 @@ void crate_t(){
 	}
 }
 int  main(){
-	Mat img = imread("C:/Users/sahakornb/Documents/2015/Multimedia/JpegCompress/OpenCV_Jpeg_8PixelCompression/Image8Pixel.jpg",0);
-	cout<<endl<<"********* Convert Picture to digital Pixel (0-255) ***********"<<endl<<endl;
+	// ========== Test Value =========//
 	int ddd[64] = {20,30,40,50,60,70,80,90,
 	30,40,50,60,70,80,90,100,
 	40,50,60,70,80,90,100,110,
@@ -244,36 +246,35 @@ int  main(){
 	70,80,90,100,110,120,130,140,
 	80,90,100,110,120,130,140,150,
 	90,100,110,120,130,140,150,160};
+	//============================//
+
+	// Start From heare.
+	Mat img = imread("C:/Users/sahakornb/Documents/2015/Multimedia/JpegCompress/OpenCV_Jpeg_8PixelCompression/Image8Pixel.jpg",0);
+	cout<<endl<<"********* Convert Picture to digital Pixel (0-255) ***********"<<endl<<endl;
 	int ni = 0;
 	for (int i = 0; i < img.rows; i++)
 	{
-	
 		for (int j = 0; j < img.cols; j++)
 		{
-			
 			cout << static_cast<int>(img.at<uchar>(j, i)) <<"\t";
 			pixelImg[j][i] = static_cast<int>(img.at<uchar>(j, i));
-			
 			//pixelImg[j][i] = ddd[ni];
 			//cout << " "<<pixelImg[j][i] << " ";
 			//ni++;
-			
-		
-
 		}
 		cout << endl;
 	}
-    crate_t();
-	matrix(0);
-	matrix(1);
-	Q_50();
-	matrix(2);
-	zigzag();
+    crate_t(); // Create T matrix
+	matrix(0); // T * p 
+	matrix(1); // T_ * Ouput
+	Q_50();	   // Create Q_50
+	matrix(2);	// Output / q_50
+	zigzag();	// reorder of output by zigzag
+
 	getchar();
 }
 void Q_10()
 {
-
 	int data[64] = { 80, 60, 50, 80, 120, 200, 255, 255,
 		55, 60, 70, 95, 130, 255, 255, 255,
 		70, 65, 80, 120, 200, 255, 255, 255,
@@ -290,9 +291,7 @@ void Q_10()
 			q_10[j][i] = data[n];
 			n++;
 		}
-
 	}
-
 }
 void Q_50()
 {
@@ -315,7 +314,6 @@ void Q_50()
 			n++;
 		}
 		cout<<endl;
-
 	}
 	cout<<endl;
 
@@ -338,8 +336,5 @@ void Q_90()
 			q_10[j][i] = data[n];
 			n++;
 		}
-
 	}
-
-
 }
