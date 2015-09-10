@@ -28,19 +28,22 @@
 #include <cmath>			   // For rounding 			
 #include <math.h>			   // For using sqrt and cos();
 #include<iomanip>
-
+#include <string>
 #define PI 3.14159265			// Difine pi value
 
 using namespace std;
 using namespace cv;
 
+	// ============= declare function =============== // 
 	float _co(int m , int n);
 	void crate_t();
+	void encoding();
 	void matrix(int num);
+	void binary();
 	void Q_10();
 	void Q_50();
 	void Q_90();
-
+	// ============= declare variable =============== // 
 	int q_10[8][8];
 	int q_50[8][8];
 	int q_90[8][8];
@@ -52,8 +55,61 @@ using namespace cv;
 	float tranform[8][8];
 	float qunt[8][8];
 	int decimal[64];
+	int binary_number[512];
+	int bi[512];
+	int index_bi = 0,index_run = 0;
+	int runlength[512];
 
+// ============= Convert Decimal to Binary function =============== // 
+void binary(int num){
+	int count,index = 0;
+	int temp[8];
+	int mod;
+	while(num >=1)
+	{
+		mod = num%2;
+		temp[index] = mod;
+		//cout<<temp[index];
+		index++;
+		num = num/2;
+	}
+	for(int i = index-1;i>=0;i--)
+	{
+		bi[index_bi] = temp[i];
+		cout<<bi[index_bi];
+		index_bi++;
+	}
+}//End binary();
 
+// ============= Run-Length Coding Count Zero (V2) Binary function =============== // 
+void runlegh(){
+	int count_zero = 0;
+	for(int i = 0;i<index_bi;i++)
+	{
+		if(bi[i] == 0)
+		{
+			count_zero++;
+		}
+		else
+		{
+			runlength[index_run] = count_zero;
+			index_run++;
+			count_zero = 0;
+		}
+	}
+	runlength[index_run] = count_zero;
+	index_run++;
+}//End runlegh();
+
+// ============= encoding decimal to  Binary function =============== // 
+void encoding(){
+	for(int i = 0;i<64;i++)
+	{
+		binary(decimal[i]);
+	}
+} // end of encoding()
+
+// ============= Reoder variable by zigzag algorithym function =============== // 
 void zigzag(){
 
 	/******************************************	  Zizag Algorithym    ***********************************************/
@@ -70,22 +126,20 @@ void zigzag(){
 	for(int i = 0;i<2;i++)
 	{
 		for(int j =0;j<2;j++){
-			decimal[n] = pixelImg[i][j];
+			decimal[n] = qunt[i][j];
 			n++;
 			if(i == 1)
 				break;
 		}
-	}
-	//------ End of First Step -------// 
-
-
+	} // End First
+	
 	//--------- Second Step ---------// 
 	for(int i = 2;i<8;i++)
 	{
 			int k = 0,l= i;
 			if(i%2 == 0){					// Check if Event number.
 			while( k <=i){
-				decimal[n] = pixelImg[k][l];
+				decimal[n] = qunt[l][k];
 				n++;
 				k++;
 				l--;
@@ -93,14 +147,14 @@ void zigzag(){
 			}
 			else{							// Odd number.
 					while( k <=i){
-				decimal[n] = pixelImg[l][k];
+				decimal[n] = qunt[k][l];
 				n++;
 				k++;
 				l--;
 				}
 			}
-		}
-	//--------- End of Second Step ---------// 
+		}// End Second
+
 
 	//--------- Third Step ---------// 
 	int endloop = 1;
@@ -111,7 +165,7 @@ void zigzag(){
 		if(endloop %2 == 1)					// Check if Odd number.
 		{
 			while(k <= start){
-				decimal[n] = pixelImg[k][l];
+				decimal[n] = qunt[l][k];
 				n++;
 				l--;
 				k++;
@@ -120,15 +174,15 @@ void zigzag(){
 		else
 		{                                      //  Event number.
 		while(k <= start){
-				decimal[n] = pixelImg[k][l];
+				decimal[n] = qunt[k][l];
 				n++;
 				l--;
 				k++;
 			}
 		}
 		endloop++;
-	}
-	//--------- End of Third Step ---------// 
+	} // End Third
+
 
 	// Show value in reordered
 
@@ -138,14 +192,12 @@ void zigzag(){
 		cout<<decimal[i]<<",";
 	}
 	
-	
-}
-void matrix(int num){
-	// If num == 0 is T matrix of DCT x pixelImg
-	// If num == 1 is T(transpot) of DCT x OUPUT of T x pixelImg
-	// If num == 2 is Quantization
+} //  End of zigzag function
 
-	if (num == 0){
+// ============= Matrix function (multiply) ==============//
+void matrix(int num){
+	
+	if (num == 0){ // If num == 0 is T matrix of DCT x pixelImg
 	float temp = 0.0;
 	for(int k = 0;k<8;++k){
 		for(int l =0;l<8;++l){
@@ -158,7 +210,8 @@ void matrix(int num){
 		}
 		}
 	} // End of num = 0
-	else if(num == 1)
+
+	else if(num == 1)		// If num == 1 is T(transpot) of DCT x OUPUT of T x pixelImg
 	{
 		 cout<<endl<<"********* Real number Value ***********"<<endl;
 	float temp = 0.0;
@@ -170,8 +223,7 @@ void matrix(int num){
 			}
 			if(temp > - 0.1 && temp <0)
 				temp = 0;
-			
-				
+
 			tranform[k][l] = floor(temp);
 			cout<<tranform[k][l]<<"\t";
 			temp = 0;
@@ -180,15 +232,15 @@ void matrix(int num){
 
 	}
 	}// End of num = 1
-	else if(num == 2)
+
+	else if(num == 2)				// If num == 2 is Quantization
 	{
 		 cout<<endl<<"********* Quantization ***********"<<endl;
 		float temp = 0.0;
 	for(int k = 0;k<8;++k){
 		for(int l =0;l<8;++l){
-			qunt[k][l] = int(tranform[k][l]/q_50[k][l]);
+			qunt[k][l] = int(tranform[k][l]/q_90[k][l]);
 			cout<<qunt[k][l]<<"\t";
-			
 		}
 		cout<<endl;
 
@@ -196,7 +248,7 @@ void matrix(int num){
 	}// End of num = 2
 }
 
-// =============== C value of DCT ==================== //
+// =============== C value of DCT function ==================== //
 float _co(int m,int n){
 		// m = 0 
 		if( m == 0)
@@ -207,9 +259,9 @@ float _co(int m,int n){
 		{
 			return sqrtf(2.0/N);
 		}
-}
-// ================================================ //
+} //End _co function 
 
+// ================ Crate T matrix function ===================== //
 void crate_t(){
   cout<<endl<<"********* Tranform Matrix ***********"<<endl;
 	for(int m = 0;m<N;m++)
@@ -235,44 +287,49 @@ void crate_t(){
 		}
 		cout<<endl;
 	}
-}
+} // End of Create T Matrix.
 int  main(){
-	// ========== Test Value =========//
-	int ddd[64] = {20,30,40,50,60,70,80,90,
-	30,40,50,60,70,80,90,100,
-	40,50,60,70,80,90,100,110,
-	50,60,70,80,90,100,110,120,
-	60,70,80,90,100,110,120,130,
-	70,80,90,100,110,120,130,140,
-	80,90,100,110,120,130,140,150,
-	90,100,110,120,130,140,150,160};
-	//============================//
 
-	// Start From heare.
+	//#############################################################################################################################//
+	//############################################### Start From HEARE ############################################################//
+	//########################################## Create By Sahakorn Buangam #######################################################//
+	//################################## Computer Engineering Naresuan University. ################################################//
+	//#############################################################################################################################//
+	
+	//   -------- Read Image From File ----------- //
 	Mat img = imread("C:/Users/sahakornb/Documents/2015/Multimedia/JpegCompress/OpenCV_Jpeg_8PixelCompression/Image8Pixel.jpg",0);
 	cout<<endl<<"********* Convert Picture to digital Pixel (0-255) ***********"<<endl<<endl;
-	int ni = 0;
+	//   -------- Convert image to digital int array ----------- //
 	for (int i = 0; i < img.rows; i++)
 	{
 		for (int j = 0; j < img.cols; j++)
 		{
 			cout << static_cast<int>(img.at<uchar>(j, i)) <<"\t";
 			pixelImg[j][i] = static_cast<int>(img.at<uchar>(j, i));
-			//pixelImg[j][i] = ddd[ni];
-			//cout << " "<<pixelImg[j][i] << " ";
-			//ni++;
 		}
 		cout << endl;
-	}
+	} // End Convert Image to digital
+
+
     crate_t(); // Create T matrix
 	matrix(0); // T * p 
 	matrix(1); // T_ * Ouput
-	Q_50();	   // Create Q_50
-	matrix(2);	// Output / q_50
+	Q_90();	   // Create Q_90
+	matrix(2);	// Output / q_90
 	zigzag();	// reorder of output by zigzag
+	cout<<endl<<endl<<"*************** encoding ******************"<<endl;
+	encoding(); //encoding to binary number
+	runlegh();  // run-lenth coding.
 
+	cout<<endl<<endl<<"*************** Run-lenth coding ******************"<<endl;
+	for(int i = 0;i<index_run;i++)
+	{
+		cout<<runlength[i]<<' ';
+	}
 	getchar();
 }
+
+// ================ Crate Quantization for Q10 ================== //
 void Q_10()
 {
 	int data[64] = { 80, 60, 50, 80, 120, 200, 255, 255,
@@ -292,7 +349,9 @@ void Q_10()
 			n++;
 		}
 	}
-}
+} // End of Q10
+
+// ================ Crate Quantization for Q50 ================== //
 void Q_50()
 {
 	int data[64] = { 16,11,10,16,24,40,51,61,
@@ -317,24 +376,26 @@ void Q_50()
 	}
 	cout<<endl;
 
-}
+} // End Q50
+
+// ================ Crate Quantization for Q90 ================== //
 void Q_90()
 {
-	int data[64] = { 80, 60, 50, 80, 120, 200, 255, 255,
-		55, 60, 70, 95, 130, 255, 255, 255,
-		70, 65, 80, 120, 200, 255, 255, 255,
-		70, 85, 110, 145, 255, 255, 255, 255,
-		90, 110, 185, 255, 255, 255, 255, 255,
-		120, 175, 255, 255, 255, 255, 255, 255,
-		245, 255, 255, 255, 255, 255, 255, 255,
-		255, 255, 255, 255, 255, 255, 255, 255 };
+	int data[64] = { 3,2,2,3,5,8,10,12,
+	2,2,3,4,5,12,12,11,
+	3,3,3,5,8,11,14,11,
+	3,3,4,6,10,17,16,12,
+	4,4,7,11,14,22,21,15,
+	5,7,11,13,16,12,23,18,
+	10,13,16,17,21,24,24,21,
+	14,18,19,20,22,20,20,20};
 	int n = 0;
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			q_10[j][i] = data[n];
+			q_90[j][i] = data[n];
 			n++;
 		}
 	}
-}
+} // End Q90
