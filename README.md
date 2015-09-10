@@ -28,7 +28,7 @@ This is an Assignment for Multimedia course. Copyright : Naresuan University.
 2. email : sahakorn.new@gmail.com
 3. Line-id : https://www.facebook.com/skornly
 
-]]></content>
+</content>
   <tabTrigger>readme</tabTrigger>
 </snippet>
 
