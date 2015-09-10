@@ -1,6 +1,6 @@
 # OpenCV_Jpeg_8PixelCompression
 <snippet>
-  <content>This Project Using DCT (Discrete Cosine Transform) for Compression jpeg image(8x8 pixel blog) and Quantization  in Q90 ,then reordered by zigzag algorithm and Convert decimal to binary number and using Run-length Coding v2(Binary) 
+  <content>This Project Using DCT (Discrete Cosine Transform) for Compression jpeg image(8x8 pixel blog) and Quantization  in Q90 ,then reordered by zigzag algorithm and Convert decimal to binary number and using Run-length Coding v2(Binary)  :) Sorry With My English Language. ^_^
 # Jpeg Compression usin DCT
  This project for Multimedia class (Naresuan University) this is an My Assignment
 ## Installation
@@ -27,7 +27,7 @@ This is an Assignment for Multimedia course. Copyright : Naresuan University.
 1. Name : Sahakorn Buangam [ Korn ]  Phisanulok , Thailand
 2. email : sahakorn.new@gmail.com
 3. Line-id : https://www.facebook.com/skornly
-
+Sorry With My English Language. ^_^
 </content>
   <tabTrigger>readme</tabTrigger>
 </snippet>
