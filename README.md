@@ -2,7 +2,7 @@
 <snippet>
   <content>This Project Using DCT (Discrete Cosine Transform) for Compression jpeg image(8x8 pixel blog) and Quantization  in Q90 ,then reordered by zigzag algorithm and Convert decimal to binary number and using Run-length Coding v2(Binary) 
 # Jpeg Compression usin DCT
-TODO: This project for Multimedia class (Naresuan University) this is an My Assignment
+ This project for Multimedia class (Naresuan University) this is an My Assignment
 ## Installation
 1. This Project using Library Opecncv 3.0 for read image 8x8 pixel in gray scale Dowload Library [http://opencv.org/]
 2. Using Visual Studio 2012 (Can using lasted version) on Windows 8.1
